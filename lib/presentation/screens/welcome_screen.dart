@@ -1,8 +1,14 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xml_test/presentation/components/rounded_button.dart';
 import 'package:flutter/material.dart';
 import 'package:xml_test/presentation/screens/loading_screen.dart';
 import 'package:xml_test/presentation/screens/settings_screen.dart';
+import 'package:xml_test/presentation/screens/sensors_screen.dart';
+import 'package:xml_test/business_logic/bloc/ws_bloc.dart';
+import 'package:xml_test/business_logic/bloc/ws_event.dart';
+
+import 'sensors_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
   static const String id = 'welcome_screen';
@@ -76,7 +82,9 @@ class _WelcomeScreenState extends State<WelcomeScreen>
               title: 'Start',
               colour: Colors.blueAccent,
               onPressed: () {
-                Navigator.pushNamed(context, LoadingScreen.id);
+                BlocProvider.of<WSBloc>(context).add(StartExchange());
+
+                Navigator.pushNamed(context, SensorsScreen.id);
               },
             ),
           ],

@@ -9,15 +9,19 @@ import 'package:xml_test/business_logic/bloc/configure_parse_bloc.dart';
 import 'package:xml_test/business_logic/bloc/configure_parse_state.dart';
 import 'package:xml_test/business_logic/bloc/configure_parse_event.dart';
 
-// import 'package:xml_test/business_logic/bloc/configure_parse_bloc.dart';
-// import 'package:xml_test/business_logic/bloc/configure_parse_state.dart';
-// import 'package:xml_test/business_logic/bloc/configure_parse_event.dart';
+import 'package:xml_test/business_logic/bloc/ws_bloc.dart';
+import 'package:xml_test/business_logic/bloc/ws_event.dart';
+import 'package:xml_test/business_logic/bloc/ws_state.dart';
 
 import 'package:xml_test/presentation/screens/welcome_screen.dart';
 import 'package:xml_test/presentation/screens/settings_screen.dart';
 import 'package:xml_test/presentation/screens/loading_screen.dart';
 import 'package:xml_test/presentation/screens/error_screen.dart';
 import 'package:xml_test/presentation/screens/sensors_screen.dart';
+
+import 'business_logic/bloc/ws_bloc.dart';
+import 'business_logic/bloc/ws_bloc.dart';
+import 'business_logic/bloc/ws_bloc.dart';
 
 void main(List<String> arguments) {
   runApp(MyApp());
@@ -30,6 +34,11 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final ConfigureParseBloc _configureParseBloc = ConfigureParseBloc();
+  WSBloc _wsBloc;
+
+  _MyAppState() {
+    _wsBloc = WSBloc(configureParseBloc: _configureParseBloc);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,13 +50,17 @@ class _MyAppState extends State<MyApp> {
       initialRoute: WelcomeScreen.id,
       routes: {
         WelcomeScreen.id: (context) => BlocProvider.value(
-            value: _configureParseBloc, child: WelcomeScreen()),
+            value: _configureParseBloc,
+            child: BlocProvider.value(value: _wsBloc, child: WelcomeScreen())),
         SettingsScreen.id: (context) => BlocProvider.value(
-            value: _configureParseBloc, child: SettingsScreen()),
+            value: _configureParseBloc,
+            child: BlocProvider.value(value: _wsBloc, child: SettingsScreen())),
         LoadingScreen.id: (context) => BlocProvider.value(
-            value: _configureParseBloc, child: LoadingScreen()),
+            value: _configureParseBloc,
+            child: BlocProvider.value(value: _wsBloc, child: LoadingScreen())),
         SensorsScreen.id: (context) => BlocProvider.value(
-            value: _configureParseBloc, child: SensorsScreen()),
+            value: _configureParseBloc,
+            child: BlocProvider.value(value: _wsBloc, child: SensorsScreen())),
       },
     );
   }
@@ -58,68 +71,68 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-            Container(
-              height: 400,
-              child: BlocBuilder<ConfigureParseBloc, ConfParseState>(
-                  builder: (context, state) {
-                if (state.sensorsList != null && state.sensorsList.isNotEmpty) {
-                  return ListView.builder(
-                      itemCount: state.sensorsList.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          title: Text('${state.sensorsList[index].name}'),
-                        );
-                      });
-                } else {
-                  return CircularProgressIndicator();
-                }
-              }),
-            )
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          BlocProvider.of<ConfigureParseBloc>(context).add(ParseConfigure());
-        },
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ),
-    );
-  }
-}
+// class MyHomePage extends StatefulWidget {
+//   MyHomePage({Key key, this.title}) : super(key: key);
+//
+//   final String title;
+//
+//   @override
+//   _MyHomePageState createState() => _MyHomePageState();
+// }
+//
+// class _MyHomePageState extends State<MyHomePage> {
+//   int _counter = 0;
+//
+//   void _incrementCounter() {
+//     setState(() {
+//       _counter++;
+//     });
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text(widget.title),
+//       ),
+//       body: Center(
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: <Widget>[
+//             Text(
+//               'You have pushed the button this many times:',
+//             ),
+//             Text(
+//               '$_counter',
+//               style: Theme.of(context).textTheme.headline4,
+//             ),
+//             Container(
+//               height: 400,
+//               child: BlocBuilder<ConfigureParseBloc, ConfParseState>(
+//                   builder: (context, state) {
+//                 if (state.sensorsList != null && state.sensorsList.isNotEmpty) {
+//                   return ListView.builder(
+//                       itemCount: state.sensorsList.length,
+//                       itemBuilder: (context, index) {
+//                         return ListTile(
+//                           title: Text('${state.sensorsList[index].name}'),
+//                         );
+//                       });
+//                 } else {
+//                   return CircularProgressIndicator();
+//                 }
+//               }),
+//             )
+//           ],
+//         ),
+//       ),
+//       floatingActionButton: FloatingActionButton(
+//         onPressed: () {
+//           BlocProvider.of<ConfigureParseBloc>(context).add(ParseConfigure());
+//         },
+//         tooltip: 'Increment',
+//         child: Icon(Icons.add),
+//       ),
+//     );
+//   }
+// }

@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xml_test/presentation/components/rounded_button.dart';
 import 'package:xml_test/presentation/constants.dart';
 import 'package:flutter/services.dart';
+import 'package:xml_test/business_logic/bloc/configure_parse_bloc.dart';
+import 'package:xml_test/business_logic/bloc/configure_parse_event.dart';
+import 'package:xml_test/business_logic/bloc/ws_bloc.dart';
+import 'package:xml_test/business_logic/bloc/ws_event.dart';
+
+import 'package:bloc/bloc.dart';
+import '../../business_logic/bloc/configure_parse_bloc.dart';
 
 class SettingsScreen extends StatefulWidget {
   static const String id = 'settings_screen';
@@ -29,7 +37,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   void initState() {
     super.initState();
-
+    // Обрабатываем ввод
     amountOfSensorsController.addListener(() {
       if (!askAllSensors) {
         amountSensors = 0;
@@ -168,6 +176,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
               colour: Colors.blueAccent,
               onPressed: () {
                 // Validate and save values
+
+                BlocProvider.of<ConfigureParseBloc>(context).add(
+                    ChangeConfigureParam(
+                        pathToConfigure: pathToConfigure,
+                        takeAllSensors: askAllSensors,
+                        amountOfSensors: amountSensors));
+
+                BlocProvider.of<ConfigureParseBloc>(context)
+                    .add(ParseConfigure());
+
+                BlocProvider.of<WSBloc>(context).add(SetParams(
+                    address: address, endpoint: endpoint, port: port));
+
+                // /home/boris/pr/uniset2/conf/test.xml
               },
             )
           ],

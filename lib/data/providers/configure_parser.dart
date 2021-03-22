@@ -18,16 +18,18 @@ class ConfigureParser {
     final results = argumentParser.parse(arguments);
     final String tag = results['tag'];
 
+    List<List<XmlAttribute>> sensorsAttributes = [];
+
     for (final argument in results.rest) {
       final file = File(argument);
       if (file.existsSync()) {
         files.add(file);
       } else {
         stderr.writeln('File not found: $file');
-        exit(2);
+        // exit(2);
+        return sensorsAttributes;
       }
     }
-    List<List<XmlAttribute>> sensorsAttributes = [];
 
     // проходим по всем файлам указанным как configure
     for (final file in files) {
